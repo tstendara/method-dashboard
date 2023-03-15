@@ -17,15 +17,6 @@ const XmlHandler = ({ setData, setPaymentDisabled, setLoading, setMethodResponse
 
       if(!funds_sourceAccs && !funds_branches && !totalAmount){
         setLoading(loading)
-
-        // const handleProcessCompletion = async() => {
-        //   await new Promise(resolve => setTimeout(resolve, 500));
-        //   setLoading(1)
-        // }
-
-        // if(loading === 100){
-        //   handleProcessCompletion()
-        // }
       }else{
         setPaymentDisabled(false)
         setLoading(0)

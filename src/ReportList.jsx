@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import API from './api/index.js';
 const api = new API();
 
-const ReportList = ({reports, disable, methodResp}) => {
+const ReportList = ({ methodResp }) => {
     const [reportList, setReportList] = useState([])
 
     useMemo(() => {
@@ -24,7 +24,7 @@ const ReportList = ({reports, disable, methodResp}) => {
         {reportList.map(({name}, idx) => {
           let id = name.slice(8, name.length)          
           return (
-            <Button key={idx} variant="contained" onClick={() => handleID(id)} disabled={disable}>
+            <Button key={idx} variant="contained" onClick={() => handleID(id)}>
               {name}
             </Button>
           )})
