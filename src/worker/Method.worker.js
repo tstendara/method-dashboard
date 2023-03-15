@@ -274,6 +274,16 @@ export default async() => {
                 console.log(e)
             }
         }
+
+        transformData = async(data, keyName, valueName) => {
+            return Object.entries(data).map(([key, value]) => {
+                let results = {
+                  [keyName]: key,
+                  [valueName]: value
+                }
+                return results
+              })
+        }
     }
 
     try {
@@ -287,7 +297,11 @@ export default async() => {
         api.last = true
         await api.createDestinationEntities()
         let reportID = await api.savejsonAndReport()
-        postMessage({'reportID': reportID, 'totalAmount': Number(api.totalAmount), 'funds_sourceAccs': api.total_funds_source_acc, 'funds_branches': api.total_funds_branch})
+        let sourceAccs_tot = await api.transformData(api.total_funds_source_acc,'sourceAcc', 'total')
+        let branches_tot = await api.transformData(api.total_funds_branch,'branch', 'total')
+        console.log(sourceAccs_tot, branches_tot)
+
+        postMessage({'reportID': reportID, 'totalAmount': Number(api.totalAmount), 'funds_sourceAccs': sourceAccs_tot, 'funds_branches': branches_tot})
     }
     catch(e){
         console.log(e)
