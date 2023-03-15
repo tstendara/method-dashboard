@@ -21,7 +21,7 @@ const saveFile = async(data) => {
     try{
         if(!data) throw new error("No data to save")
         let results = await mongoose.connection.db.listCollections().toArray()
-        let employeeNum = results.length - 1
+        let employeeNum = results.length
         let newcollectionName = `employee${employeeNum}`
         let Employee = mongoose.model("Employee", EmployeeSchema, newcollectionName)
         await Employee.insertMany(data)
@@ -77,10 +77,10 @@ const sortedCollection = async() => {
             return 0;
         })
         return results
-        }   
-        catch(e){
-            console.log(e)
-        }
+    }   
+    catch(e){
+        console.log(e)
+    }
 }
 
 module.exports = { saveFile, findReport, saveReport, getFileById, sortedCollection }
