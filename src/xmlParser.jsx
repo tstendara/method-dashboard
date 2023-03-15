@@ -15,7 +15,7 @@ const XmlHandler = ({ setData, setPaymentDisabled, setLoading, setMethodResponse
     instance.onmessage = (e) => {
       let { loading, funds_sourceAccs, funds_branches, totalAmount } = e.data
 
-      if(!funds_sourceAccs && !funds_branches){
+      if(!funds_sourceAccs && !funds_branches && !totalAmount){
         setLoading(loading)
 
         // const handleProcessCompletion = async() => {
@@ -54,7 +54,7 @@ const XmlHandler = ({ setData, setPaymentDisabled, setLoading, setMethodResponse
     .then(({data}) => {
       console.log('file uploaded successfully');
       setData(data)
-      instance.postMessage({'data': data, 'url': document.location.protocol + '//' + document.location.host});
+      instance.postMessage({'data': data});
     })
     .catch(err => console.log(err))  
   };

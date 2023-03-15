@@ -7,23 +7,32 @@ import { Alert, Box, LinearProgress } from '@mui/material';
 import AlertDialog from './AlertDialog.jsx'
 import XmlHandler from './xmlParser.jsx'
 import ResponsiveAppBar from './Header.jsx';
+import ReportList from './ReportList';
+
+// import API from './api/index.js';
+
+// const api = new API();
 
 function Dashboard() {
   const [data, setData] = useState([]);
   const [paymentDisabled, setPaymentDisabled] = useState(true);
   const [loading, setLoading] = useState(0);
   const [disable, setDisable] = useState(false);
-  const [reports, setReports] = useState([{'name': 'report1'}, {'name': 'report2'}]);
+  const [reports, setReports] = useState([]);
   const [methodResp, setMethodResp] = useState({});
   const [openAlert, setOpenAlert] = useState(false);
   
   // useEffect(() => {
   //   // get reports from db
-  //   // setReports(reports)
-  // }, [])
+  //   api.getFiles().then((resp) => {
+  //     // console.log(resp)
+  //     setReports(resp)
+  //   })
+  // }, [methodResp]) // put update for when new report is added 
 
+  const resetCount = () => setLoading(0) // passninto xml parser 
   const handlePaymentSummary = async() => setOpenAlert(true)
-  
+
   return (
   <>
     <ResponsiveAppBar />
@@ -35,7 +44,7 @@ function Dashboard() {
     value={loading}
     /> : null
     }
-    {/* <AlertDialog /> */}
+
     <Button variant="contained" onClick={handlePaymentSummary} disabled={paymentDisabled}>
         Submit payment
       </Button>
@@ -72,15 +81,9 @@ function Dashboard() {
       />
     </div>
     <XmlHandler setData={setData} setPaymentDisabled={setPaymentDisabled} setLoading={setLoading} setDisable={setDisable} setMethodResponse={setMethodResp} />
-    <Box> {/* create list of reports here  */}
+    <Box> 
         <h2>Reports</h2>
-        {reports.map(({name}, idx) => {
-          // use idx to grab report data from /report/:id 
-          return (
-            <Button key={idx} variant="contained" onClick={() => console.log('oi')} disabled={disable}>
-              {name}
-            </Button>
-          )})}
+        <ReportList reports={reports} disable={disable} methodResp={methodResp} />
     </Box>
     </div>
   </>
