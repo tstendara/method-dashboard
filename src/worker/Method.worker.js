@@ -296,10 +296,10 @@ export default async() => {
         new Promise(resolve => setTimeout(resolve, 2000))
         api.last = true
         await api.createDestinationEntities()
+        api.total_funds_source_acc = await api.transformData(api.total_funds_source_acc,'sourceAcc', 'total')
+        api.total_funds_branch = await api.transformData(api.total_funds_branch,'branch', 'total')
         let reportID = await api.savejsonAndReport()
-        let sourceAccs_tot = await api.transformData(api.total_funds_source_acc,'sourceAcc', 'total')
-        let branches_tot = await api.transformData(api.total_funds_branch,'branch', 'total')
-        postMessage({'reportID': reportID, 'totalAmount': Number(api.totalAmount), 'funds_sourceAccs': sourceAccs_tot, 'funds_branches': branches_tot})
+        postMessage({'reportID': reportID, 'totalAmount': Number(api.totalAmount), 'funds_sourceAccs': api.total_funds_source_acc, 'funds_branches': api.total_funds_branch})
     }
     catch(e){
         console.log(e)
