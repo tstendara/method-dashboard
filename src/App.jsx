@@ -13,8 +13,6 @@ const Dashboard = () => {
   const [data, setData] = useState([]);
   const [paymentDisabled, setPaymentDisabled] = useState(true);
   const [loading, setLoading] = useState(0);
-  const [disable, setDisable] = useState(false);
-  const [reports, setReports] = useState([]);
   const [methodResp, setMethodResp] = useState({});
   const [openAlert, setOpenAlert] = useState(false);
 
@@ -67,10 +65,10 @@ const Dashboard = () => {
         }}
       />
     </div>
-    <XmlHandler setData={setData} setPaymentDisabled={setPaymentDisabled} setLoading={setLoading} setDisable={setDisable} setMethodResponse={setMethodResp} />
+    <XmlHandler setData={setData} setPaymentDisabled={setPaymentDisabled} setLoading={setLoading} setMethodResponse={setMethodResp} />
     <Box> 
         <h2>Reports</h2>
-        <ReportList reports={reports} disable={disable} methodResp={methodResp} />
+        <ReportList methodResp={methodResp} />
     </Box>
     </div>
   </>
