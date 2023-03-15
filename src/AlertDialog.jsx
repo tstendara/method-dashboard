@@ -6,24 +6,13 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-export default function AlertDialog({methodResponse, openAlert, setOpenAlert}) {
-  // const [open, setOpen] = React.useState(openAlert);
-  console.log(methodResponse)
+const AlertDialog = ({methodResponse, openAlert, setOpenAlert}) => {
   let {totalAmount} = methodResponse
-  // totalAmount = 10000
-  React.useEffect(() => {
-    console.log('should render')
-  })
-
-  const handleClickOpen = () => {
-    setOpenAlert(true);
-  };
 
   const handleClose = () => {
     setOpenAlert(false);
   };
 
-  // function to rewrite total amount to currency format
   const formatCurrency = (amount) => {
     return amount.toLocaleString('en-US', {
       style: 'currency',
@@ -32,10 +21,7 @@ export default function AlertDialog({methodResponse, openAlert, setOpenAlert}) {
   }
 
   return (
-    <div>
-      {/* <Button variant="outlined" onClick={handleClickOpen}>
-        Open alert dialog
-      </Button> */}
+    <>
       <Dialog
         open={openAlert}
         onClose={handleClose}
@@ -57,6 +43,7 @@ export default function AlertDialog({methodResponse, openAlert, setOpenAlert}) {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 }
+export default AlertDialog;

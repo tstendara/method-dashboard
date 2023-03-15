@@ -1,4 +1,4 @@
-import React, { useEffect, useState, memo, useMemo } from 'react';
+import React, { useState, memo, useMemo } from 'react';
 import Button from '@mui/material/Button';
 
 import API from './api/index.js';
@@ -22,9 +22,7 @@ const ReportList = ({reports, disable, methodResp}) => {
     return (
         <>
         {reportList.map(({name}, idx) => {
-          let id = name.slice(8, name.length)
-        //   console.log(id)
-          
+          let id = name.slice(8, name.length)          
           return (
             <Button key={idx} variant="contained" onClick={() => handleID(id)} disabled={disable}>
               {name}

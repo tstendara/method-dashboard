@@ -23,7 +23,7 @@ const styles = {
   },
 };
 
-function ResponsiveAppBar() {
+const ResponsiveAppBar = () => {
   return (
     <div style={styles.root}>
       <AppBar position="static">

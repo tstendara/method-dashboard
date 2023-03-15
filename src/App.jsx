@@ -1,5 +1,5 @@
 import './App.css'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid';
 import { Box, LinearProgress } from '@mui/material';
@@ -9,7 +9,7 @@ import XmlHandler from './xmlParser.jsx'
 import ResponsiveAppBar from './Header.jsx';
 import ReportList from './ReportList';
 
-function Dashboard() {
+const Dashboard = () => {
   const [data, setData] = useState([]);
   const [paymentDisabled, setPaymentDisabled] = useState(true);
   const [loading, setLoading] = useState(0);

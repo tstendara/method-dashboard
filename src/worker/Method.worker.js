@@ -1,13 +1,9 @@
 /* eslint-disable */
-// let {x} = require('./test.js')
+
 export default async() => {
-    // let {x} = self.importScripts('test.js')
+
     self.onmessage = async(e) => {
-        let {data, url} = e.data
-        // console.o
-        // importScripts(url + '/startMethodApi')
-        // import(url + '/method_api/MethodApi.js')
-        // import MethodApi from "../method_api/MethodApi"
+        let {data} = e.data
   
         const postApi = async(payload, endpoint) => {
             return new Promise(async(resolve, reject) => {
@@ -110,7 +106,7 @@ export default async() => {
             this.data = data,
             this.modifiedData = [],
             this.count = 0,
-            this.limit = 1200, //data.length/2,   // expecting 25k entities
+            this.limit = 1200, //data.length
             this.last = false,
             this.interval = 600, // Rate limit
             this.total_funds_source_acc = {},
@@ -262,7 +258,6 @@ export default async() => {
                 let json = this.data
                 let sourceAccs = this.total_funds_source_acc
                 let branches = this.total_funds_branch
-                console.log(json.length)
                 let collectionNum = await postLocalApi(json, 'saveFile')
                 
                 const report = {
@@ -291,8 +286,6 @@ export default async() => {
         api.last = true
         await api.createDestinationEntities()
         let reportID = await api.savejsonAndReport()
-
-        // maybe postmessage back with collection id for report - then update current report when user 
         postMessage({'reportID': reportID, 'totalAmount': Number(api.totalAmount), 'funds_sourceAccs': api.total_funds_source_acc, 'funds_branches': api.total_funds_branch})
     }
     catch(e){
