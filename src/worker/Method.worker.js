@@ -299,8 +299,6 @@ export default async() => {
         let reportID = await api.savejsonAndReport()
         let sourceAccs_tot = await api.transformData(api.total_funds_source_acc,'sourceAcc', 'total')
         let branches_tot = await api.transformData(api.total_funds_branch,'branch', 'total')
-        console.log(sourceAccs_tot, branches_tot)
-
         postMessage({'reportID': reportID, 'totalAmount': Number(api.totalAmount), 'funds_sourceAccs': sourceAccs_tot, 'funds_branches': branches_tot})
     }
     catch(e){
