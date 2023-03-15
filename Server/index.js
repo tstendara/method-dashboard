@@ -2,16 +2,13 @@ const express = require("express");
 const fs = require("fs")
 const cors = require("cors");
 const path = require("path");
+const { parseStringPromise } = require('xml2js');
 
 const port = 3000;
 const app = express();
 
-const { saveFile, findReport, saveReport, getFileById, sortedCollection } = require("../DB/Controllers/index.js")
+const { saveFile, findReport, saveReport, sortedCollection } = require("../DB/Controllers/index.js")
 const { parseFile } = require("./utility.js")
-const { parseStringPromise } = require('xml2js');
-
-// const MethodApi = require("./method_api/MethodApi.js");
-// const { method } = require("../DB/Models/EmployeeSchema.js");
 
 const router = express.Router();
 const corsOptions = {
@@ -21,8 +18,6 @@ const configuredCors = cors(corsOptions);
 
 app.use(configuredCors)
 app.use(express.json({limit: '60mb'}));
-app.use(express.urlencoded({ extended: true, limit: '60mb'}));
-// app.use(express.static(path.join(__dirname, 'uploads'))) // maybe server up files from here
 app.use(router)
 
 
@@ -71,10 +66,10 @@ router.get("/allFiles", async(req, res) => {
     try{
         let result = await sortedCollection()
         res.send(result)
-        }   
-        catch(e){
-            console.log(e)
-        }
+    }   
+    catch(e){
+        console.log(e)
+    }
 })
 
 router.get("/report/:id", async(req, res) => {
@@ -87,7 +82,7 @@ router.get("/report/:id", async(req, res) => {
     catch(e){
         console.log(e)
         res.sendStatus(500)
-        }
+    }
 })
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
