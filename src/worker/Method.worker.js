@@ -93,6 +93,7 @@ export default async() => {
                 }).catch((err) => console.log(err))
                 try {
                     let results = await response.json()
+                    console.log('saved report!')
                     resolve(results)
                 }
                 catch(e){
