@@ -39,6 +39,7 @@ const Dashboard = () => {
         : null
       }
     <div style={{ height: 500, width: '100%', marginBottom: 15, color: 'red' }}>
+      
       <DataGrid
       initialState={{
         sorting: {

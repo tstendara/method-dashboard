@@ -11,15 +11,27 @@ const { saveFile, findReport, saveReport, sortedCollection } = require("../DB/Co
 const { parseFile } = require("./utility.js")
 
 const router = express.Router();
+
 const corsOptions = {
     allowedOrigins: ['http://localhost:3001']
 }
 const configuredCors = cors(corsOptions);
 
 app.use(configuredCors)
-app.use(express.json({limit: '60mb'}));
+app.use(express.json({limit: '1000mb'}));
+app.use(express.urlencoded({limit: '10000mb', extended: true}));
 app.use(router)
 
+var server = require('http').Server(app);
+var io = require('socket.io')(server, {
+    cors: {
+        origin: "http://localhost:3001",
+        // methods: ["GET", "POST"],
+        maxHttpBufferSize: 1e9
+    },
+    pingTimeout: 250000,
+    pingInterval: 250000
+});
 
 router.post("/XmlToJson", async(req, res) => {
     try{
@@ -85,4 +97,50 @@ router.get("/report/:id", async(req, res) => {
     }
 })
 
-app.listen(port, () => console.log(`Example app listening on port ${port}!`));
+router.post("/processRawData", async(req, res) => {
+    let data = req.body;
+    try{
+        let results = await new Promise(async(resolve, reject) => {
+            const uniqueEmpRef = {};
+            let newEmployeeList = []
+            await data.forEach((obj) => {
+                let {Employee, Amount} = obj;
+                let amount = Amount[0];
+    
+                const {FirstName, LastName} = Employee[0];
+                const name = `${FirstName} ${LastName}`;
+    
+                if (name in uniqueEmpRef) {
+                    let curAmount = newEmployeeList[uniqueEmpRef[name]].Amount[0].slice(1)
+                    let newAmount = (parseFloat(curAmount) + parseFloat(amount.slice(1))).toFixed(2)
+                    newEmployeeList[uniqueEmpRef[name]].Amount[0] = `$${newAmount}`
+                } else {
+                    newEmployeeList.push(obj)
+                    uniqueEmpRef[name] = newEmployeeList.length-1; // idx of the new employee list
+                }
+                resolve(newEmployeeList)
+            })
+        })
+        await fs.promises.writeFile(__dirname + '/uploads/json/processed.json', JSON.stringify(results))
+        // res.sendStatus(200)
+        res.send(results)
+    }
+    catch(e){
+        console.log(e)
+        res.sendStatus(500)
+        }
+})
+
+io.on('connection', (socket) => {
+    console.log('A user connected');
+    // socket.emit('progress', 'starting')
+    socket.on("start", async(data) => {
+        console.log('clientEvent:', data)
+        await require('./service/index.js')(io)
+    })
+    socket.on('disconnect', () => {
+        console.log('A user disconnected');
+    });
+});
+
+server.listen(port, () => console.log(`Example app listening on port ${port}!`));
