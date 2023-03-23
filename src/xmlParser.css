@@ -1,0 +1,14 @@
+.xml-handler {
+    margin: 12px 0 0 12px;
+    width: calc(100% + 2px);
+}
+.xml-handler > * {
+    margin: 10px; 
+    padding: 0 10px;
+}
+.file-upload {
+    width: 200px;
+    height: 100px;
+    padding-top: 4px;
+    border: 1px solid #ccc;
+}
