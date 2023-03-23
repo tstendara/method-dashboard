@@ -9,14 +9,20 @@ import XmlHandler from './xmlParser.jsx'
 import ResponsiveAppBar from './Header.jsx';
 import ReportList from './ReportList';
 
+import { io } from 'socket.io-client';
+let socket = io('http://localhost:3000', {autoConnect: true});
+
 const Dashboard = () => {
   const [data, setData] = useState([]);
   const [paymentDisabled, setPaymentDisabled] = useState(true);
   const [loading, setLoading] = useState(0);
   const [methodResp, setMethodResp] = useState({});
   const [openAlert, setOpenAlert] = useState(false);
+  const [paymentResp, setPaymentResp] = useState({});
 
-  const handlePaymentSummary = async() => setOpenAlert(true)
+  const handlePaymentSummary = async() => {
+    setOpenAlert(true)
+  }
 
   return (
   <>
@@ -31,11 +37,11 @@ const Dashboard = () => {
     }
 
     <Button variant="contained" onClick={handlePaymentSummary} disabled={paymentDisabled}>
-        Submit payment
+        Submit payment & Generate Report
       </Button>
       {
         openAlert ? 
-        <AlertDialog methodResponse={methodResp} openAlert={openAlert} setOpenAlert={setOpenAlert} />
+        <AlertDialog methodResponse={methodResp} openAlert={openAlert} setOpenAlert={setOpenAlert} setLoading={setLoading} setPaymentDisabled={setPaymentDisabled} socket={socket} setPaymentResp={setPaymentResp} />
         : null
       }
     <div style={{ height: 500, width: '100%', marginBottom: 15, color: 'red' }}>
@@ -66,10 +72,10 @@ const Dashboard = () => {
         }}
       />
     </div>
-    <XmlHandler setData={setData} setPaymentDisabled={setPaymentDisabled} setLoading={setLoading} setMethodResponse={setMethodResp} />
+    <XmlHandler setData={setData} setPaymentDisabled={setPaymentDisabled} setLoading={setLoading} setMethodResponse={setMethodResp} socket={socket} />
     <Box> 
         <h2>Reports</h2>
-        <ReportList methodResp={methodResp} />
+        <ReportList paymentResp={paymentResp} />
     </Box>
     </div>
   </>

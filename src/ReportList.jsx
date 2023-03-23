@@ -5,14 +5,14 @@ import { csvFormat } from './utils/createCSV.js';
 import API from './api/index.js';
 const api = new API();
 
-const ReportList = ({ methodResp }) => {
+const ReportList = ({ paymentResp }) => {
     const [reportList, setReportList] = useState([])
 
     useMemo(() => {
         api.getFiles().then((resp) => {
             setReportList(resp)
         })
-    }, [methodResp])
+    }, [paymentResp])
 
     const handleDownload = (id) => {
         api.getReportByID(id).then(async(resp) => {
@@ -41,6 +41,6 @@ const ReportList = ({ methodResp }) => {
 }
 
 const compareProps = (prevProps, nextProps) => {
-    return prevProps.methodResp === nextProps.methodResp
+    return prevProps.paymentResp === nextProps.paymentResp
 }
 export default memo(ReportList, compareProps);

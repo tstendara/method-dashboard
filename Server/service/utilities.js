@@ -3,24 +3,22 @@ const postApi = async(payload, endpoint) => {
         let response =  await fetch(`https://dev.methodfi.com/${endpoint}`, {
             method: 'POST',
             headers: {
-                'Authorization': 'Bearer sk_YJ734xX83WT3MBRyA3EezdAP', //P
+                'Authorization': 'Bearer ' + process.env.METHOD_API, 
                 'Content-Type': 'application/json'
             },
                 body: payload
-                // timeout: 5000
         }).catch((e) => reject(e))
         try {
             let results = await response.json()
             resolve(results)
         }
         catch(e){
-            console.log(e, '| Response: ', '\n payload: ', payload)
             reject(e)
         }
     })
 }
 
-const createDestinationEntity = async({ entity_id, mch_id, AccountNumber }) => {
+const createDestinationEntity = async({ entity_id }, { mch_id, AccountNumber }) => {
     return await new Promise(async (resolve, reject) => {
         let [entityID, mchID, accountNumber] = [entity_id, mch_id, AccountNumber[0]]
         let body = JSON.stringify({
@@ -31,7 +29,9 @@ const createDestinationEntity = async({ entity_id, mch_id, AccountNumber }) => {
             }
         })
         try {
-            let {data:{id}} = await postApi(body, 'accounts')
+            let results = await postApi(body, 'accounts')
+            if(!results.success) reject('destination entity failed')
+            let {data:{id}} = results
             resolve(id)
         }
         catch(e){
@@ -40,21 +40,20 @@ const createDestinationEntity = async({ entity_id, mch_id, AccountNumber }) => {
     })
 }
 
-const createSrcEntity = async({ ABARouting, AccountNumber, entity_id }) => {
+const createSrcEntity = async({entity_id}, { AccountNumber, RoutingNumber}) => {
     return new Promise(async (resolve, reject) => {
-        let [routingNumber, accountNumber, entityid] = [ABARouting[0], AccountNumber[0], entity_id]
-        console.log('\n', routingNumber, accountNumber, entityid, '\n')
         let body = JSON.stringify({
-            'holder_id': entityid,
+            'holder_id': entity_id,
             'ach': {
-                'routing': routingNumber,
-                'number': accountNumber,
+                'routing': RoutingNumber,
+                'number': AccountNumber,
                 'type': 'checking'
             }
         })
-        console.log('before: ', body)
         try {
-            let {data:{id}} = await postApi(body, 'accounts')
+            let results = await postApi(body, 'accounts')
+            if(!results.success) reject('source entity failed')
+            let {data:{id}} = results
             resolve(id)
         }
         catch(e){
@@ -79,7 +78,9 @@ const createEntity = async({ FirstName, LastName, DOB, PhoneNumber }) => {
             }
         })
         try {
-            let {data: {id}} = await postApi(body, 'entities')
+            let results = await postApi(body, 'entities')
+            if(!results.success) reject('user entity failed')
+            let {data: {id}} = results
             resolve(id)
         }
         catch(e){
@@ -88,6 +89,29 @@ const createEntity = async({ FirstName, LastName, DOB, PhoneNumber }) => {
     })
 } 
 
+const submitPayment = async({ mch_id, dest_id }, amount) => {
+    return new Promise(async (resolve, reject) => {
+        let body = JSON.stringify({
+            'amount': amount,
+            'source': mch_id,
+            'destination': dest_id,
+            'description': 'Loan Pmt'
+        })
+        try {
+            let results = await postApi(body, 'payments')
+            if(!results.success) {
+                console.log('payload: ', body)
+                console.log('results: ', results)
+                reject('Payment Failed')
+            }
+            resolve('Payment Successful')
+        }
+        catch(e){
+            reject(e)
+        }
+    })
+}
+
 const postLocalApi = async(payload, endpoint) => {
     return new Promise(async(resolve, reject) => {
         let response =  await fetch(`http://localhost:3000/${endpoint}`, {
@@ -95,18 +119,17 @@ const postLocalApi = async(payload, endpoint) => {
             'Content-Type': 'application/json'
         },
             method: 'POST',
-            body: JSON.stringify(payload),
-            timeout: 0
+            body: JSON.stringify(payload)
         }).catch((err) => console.log(err))
         try {
             let results = await response.json()
-            console.log('saved report!')
             resolve(results)
         }
         catch(e){
             console.log(e)
+            reject(e)
         }
     })
 }
 
-module.exports = { postLocalApi, createEntity, createSrcEntity, createDestinationEntity, postApi }
+module.exports = { postLocalApi, createEntity, createSrcEntity, createDestinationEntity, postApi, submitPayment }

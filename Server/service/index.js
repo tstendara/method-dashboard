@@ -12,18 +12,15 @@ module.exports = async function (importIO) {
         console.log('Creating employees')
         await api.createEntities()
         console.log('Creating source accs')
-        new Promise(resolve => setTimeout(resolve, 15000))
-        await api.createSourceAccs(); // 45
+        new Promise(resolve => setTimeout(resolve, 5000))
+        await api.createSourceAccs(); 
         console.log('Creating destination accs')
-        new Promise(resolve => setTimeout(resolve, 15000))
+        new Promise(resolve => setTimeout(resolve, 5000))
         api.last = true
         await api.createDestinationEntities()
-        api.total_funds_source_acc = await api.transformData(api.total_funds_source_acc,'sourceAcc', 'total')
-        api.total_funds_branch = await api.transformData(api.total_funds_branch,'branch', 'total')
-        let reportID = await api.savejsonAndReport()
-        console.log({'reportID': reportID, 'totalAmount': Number(api.totalAmount), 'funds_sourceAccs': api.total_funds_source_acc, 'funds_branches': api.total_funds_branch})
-        console.log('failed: ', api.failed, api.failed.length,api.failed[0])
-        io.emit('finished', {'reportID': reportID, 'totalAmount': Number(api.totalAmount), 'funds_sourceAccs': api.total_funds_source_acc, 'funds_branches': api.total_funds_branch})
+        let fileID = await api.saveFile()
+        await api.saveUpdatedFile()
+        io.emit('finished', {'fileID': fileID, 'totalAmount': Number(api.totalAmount)})
     }
     catch(e){
         console.log(e)
