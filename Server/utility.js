@@ -11,7 +11,6 @@ let parseFile = (req) => new Promise((resolve, reject) => {
     form.parse(req, async(err, fields, {file}) => {
         if(err) reject(err);
         let { originalFilename } = file;
-
         if(!file) reject(new Error("No file uploaded"));
         if(!isExt(originalFilename)) reject(new Error("File is not an xml file"));
         resolve(file);

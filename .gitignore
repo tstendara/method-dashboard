@@ -24,3 +24,5 @@ yarn-error.log*
 
 .vscode
 
+/Server/uploads/json/*
+/server/uploads/xml/*
