@@ -4,8 +4,8 @@
 
 In your terminal, export these values before running:
 ```
-export METHOD_API='sk_YJ734xX83WT3MBRyA3EezdAP'
-export MONGO_URI='mongodb+srv://tylers:8ir7D51yjupne4Iz@method.tzciphz.mongodb.net/Method-dashboard'
+export METHOD_API='{METHOD_API}'
+export MONGO_URI='{MONGO_URI}'
 ```
 
 To start frontend: `npm run start`
