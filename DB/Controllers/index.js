@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const EmployeeSchema = require("../Models/EmployeeSchema.js");
 const ReportSchema = require("../Models/ReportSchema.js");
 
-const query = 'mongodb+srv://tylers:8ir7D51yjupne4Iz@method.tzciphz.mongodb.net/Method-dashboard';
+const query = process.env.MONGO_URI;
 const db = (query);
 
 mongoose.Promise = global.Promise;
@@ -46,11 +46,12 @@ const saveReport = async (data) => {
     try{
         if(!data) throw new error("No data to save")
         await Report.create(data)
-        return true
+        console.log(data) // need to send back id to client
+        return data["EmployeeID"]
     }
     catch(e){
         console.error(e)
-        return false
+        throw e;
     }
 }
 
