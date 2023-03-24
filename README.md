@@ -21,7 +21,7 @@ After this is finished, the Submit Payment & Generate Report will become enabled
 
 ## future plans:
 - Better error handling to get each specific employee and their loanAccont.
-- More communication when the process starts to present which step the user/all steps.
+- More communication when the process starts to render progress on which step the user is currently on/all steps.
 - Utilize MVC architecture for better separation of concern.
 - Server side rendering. 
 - Decoupled dependencies from the frontend and backend.
